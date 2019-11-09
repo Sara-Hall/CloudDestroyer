@@ -1,0 +1,46 @@
+/*
+ * Draw clouds for the game
+ */
+package BrickGame;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+/**
+ *
+ * @author sara
+ */
+public class Clouds {
+    public int[][] clouds;
+    public int cloudLength;
+    public int cloudHeight;
+    
+    // set cloud initial values equal to 1
+    public Clouds(int row,int col) {
+        clouds = new int[row][col];
+        for(int i=0; i < clouds.length; i++) {
+            for(int j=0; j < clouds[0].length; j++) {
+                clouds[i][j] = 1;
+            }
+        }
+        // size of clouds
+        cloudLength = 120;
+        cloudHeight = 40;
+    }
+    // draw clouds
+    public void draw(Graphics2D g) {
+        for(int i=0; i < clouds.length; i++) {
+            for(int j=0; j < clouds[0].length; j++) {
+                // don't draw the cloud if it's hit
+                if(clouds[i][j] > 0) {
+                    g.setColor(Color.white);
+                    g.fillOval(j * cloudLength + 50, i * cloudHeight + 30, cloudLength, cloudHeight);
+                }
+            }
+        }    
+    }
+    
+    public void cloudValue(int value, int row, int col) {
+        clouds[row][col] = value;
+    }
+    
+}

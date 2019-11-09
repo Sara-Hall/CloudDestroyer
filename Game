@@ -8,6 +8,7 @@ package BrickGame;
  * @author sara
  */
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -28,6 +29,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private int Horizontal = -2;
     private int Vertical = -4;
     private final Clouds clouds;
+    private int totalClouds = 20;
+    private int Health = 3;
     
     public Game() {
         clouds = new Clouds(5,4);
@@ -38,23 +41,46 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         timer.start();
     }
     
-    public void paint(Graphics draw) {
+    //graphics
+    public void paint(Graphics g) {
         // draw background
-        draw.setColor(Color.BLUE.brighter());
-        draw.fillRect(1,1,600,700);      
+        g.setColor(Color.BLUE.brighter());
+        g.fillRect(1,1,600,700);      
         
         // draw clouds
-        clouds.draw((Graphics2D)draw);
+        clouds.draw((Graphics2D)g);
         
         // draw paddle
-        draw.setColor(Color.green);
-        draw.fillRect(paddleX,600,80,15);
+        g.setColor(Color.green);
+        g.fillRect(paddleX,600,80,15);
         
         // draw ball
-        draw.setColor(Color.yellow);
-        draw.fillOval(ballX,ballY,20,20);   
+        g.setColor(Color.yellow);
+        g.fillOval(ballX,ballY,20,20);   
         
-        draw.dispose();
+        // draw health
+        g.setColor(Color.black);
+        Font font = new Font ("Courier New", 1, 25);
+        g.setFont(font);
+        g.drawString("Lives: " + String.valueOf(Health), 20, 30);
+        
+        // draw winner
+        if (totalClouds == 0) {
+            play = false;
+            timer.stop();
+            g.setColor(Color.black);
+            g.setFont(font);
+            g.drawString ("WINNER", 220, 300);
+        // draw game over
+        } else if (Health == 0) {
+            play = false;
+            timer.stop();
+            g.setColor(Color.black);
+            g.setFont(font);
+            g.drawString("GAME OVER", 220, 300);
+        }
+        
+        g.dispose();
     }
     
 
@@ -117,6 +143,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                         // when ball intersects with a cloud
                         if(ballSpace.intersects(cloudSpace)) {
                             clouds.cloudValue(0, i, j);
+                            totalClouds--;
                             
                             // if it hit the side of the cloud
                             if(ballX + 19 <= cloudSpace.x || ballX + 1 >= cloudSpace.x + cloudSpace.width) {
@@ -139,16 +166,20 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             if(ballX < 0) {
                 // change horizontal direction
                 Horizontal = -Horizontal;
-            }
             // when it hits the top of the screen
-            if(ballY < 0) {
+            } else if (ballY < 0) {
                 // change vertical direction
                 Vertical = -Vertical;
-            }
             // when it hits the right side of the screen
-            if(ballX > 570) {
+            } else if(ballX > 570) {
                 // change horizontal direction
                 Horizontal = -Horizontal;
+            // when it hits the bottom of the screen
+            } else if(ballY >= 650) {
+                // change vertical direction
+                Vertical = -Vertical;
+                // take away a life
+                Health--;
             }
         }
         repaint();

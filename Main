@@ -1,0 +1,22 @@
+/*
+ * Main class
+ */
+package BrickGame;
+
+/**
+ *
+ * @author sara
+ */
+import javax.swing.JFrame;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame game = new JFrame();
+        Game Start = new Game();
+        game.setBounds(10,10,600,700);
+        game.setResizable(false);
+        game.setVisible(true);
+        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        game.add(Start);
+    }
+}

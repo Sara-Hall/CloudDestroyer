@@ -31,6 +31,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private final Clouds clouds;
     private int totalClouds = 20;
     private int Health = 3;
+    private int mainMenu = 1;
     
     public Game() {
         clouds = new Clouds(5,4);
@@ -44,25 +45,36 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     //graphics
     public void paint(Graphics g) {
         // draw background
-        g.setColor(Color.BLUE.brighter());
+        g.setColor(Color.cyan);
         g.fillRect(1,1,600,700);      
         
         // draw clouds
         clouds.draw((Graphics2D)g);
         
         // draw paddle
-        g.setColor(Color.green);
+        g.setColor(Color.blue);
         g.fillRect(paddleX,600,80,15);
         
         // draw ball
-        g.setColor(Color.yellow);
+        g.setColor(Color.magenta);
         g.fillOval(ballX,ballY,20,20);   
         
         // draw health
         g.setColor(Color.black);
-        Font font = new Font ("Courier New", 1, 25);
+        Font font = new Font ("Arial", 1, 25);
         g.setFont(font);
-        g.drawString("Lives: " + String.valueOf(Health), 20, 30);
+        g.drawString("Lives: " + String.valueOf(Health), 20, 28);
+        
+        //draw main menu
+        if (mainMenu == 1) {
+            g.setColor(Color.cyan);
+            g.fillRect(1,1,600,700);  
+            g.setColor(Color.black);
+            g.setFont(font);
+            g.drawString("CLOUD DESTROYER", 20, 300);
+            g.drawString("Use the arrow keys to move the paddle", 20, 340);
+            g.drawString("Press enter to start", 20, 370);
+        }
         
         // draw winner
         if (totalClouds == 0) {
@@ -86,11 +98,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyTyped(KeyEvent ke) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // don't need this
     }
 
     @Override
     public void keyPressed(KeyEvent ke) {
+        mainMenu = 0;
         if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
             // if paddle is all the way to the right, stop it from moving
             if (paddleX >= 515) {
@@ -115,7 +128,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent ke) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // don't need this
     }
 
     @Override
@@ -184,5 +197,4 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         repaint();
     }
-    
 }

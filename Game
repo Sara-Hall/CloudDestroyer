@@ -1,0 +1,157 @@
+/*
+ * Gameplay for my game
+ */
+package BrickGame;
+
+/**
+ *
+ * @author sara
+ */
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.Timer;
+
+public class Game extends JPanel implements KeyListener, ActionListener {
+    private boolean play = false;
+    private final Timer timer;
+    private final int delay = 10;
+    private int paddleX = 450;
+    private int ballX = 200;
+    private int ballY = 300;
+    private int Horizontal = -2;
+    private int Vertical = -4;
+    private final Clouds clouds;
+    
+    public Game() {
+        clouds = new Clouds(5,4);
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        timer = new Timer(delay,this);
+        timer.start();
+    }
+    
+    public void paint(Graphics draw) {
+        // draw background
+        draw.setColor(Color.BLUE.brighter());
+        draw.fillRect(1,1,600,700);      
+        
+        // draw clouds
+        clouds.draw((Graphics2D)draw);
+        
+        // draw paddle
+        draw.setColor(Color.green);
+        draw.fillRect(paddleX,600,80,15);
+        
+        // draw ball
+        draw.setColor(Color.yellow);
+        draw.fillOval(ballX,ballY,20,20);   
+        
+        draw.dispose();
+    }
+    
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+            // if paddle is all the way to the right, stop it from moving
+            if (paddleX >= 515) {
+                paddleX = 515;
+            } else {
+                // move the paddle right when the right arrow key is pressed
+                play = true;
+                paddleX = paddleX + 30;
+            }
+        }
+        if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+            // if paddle is all the way to the left, stop it from moving
+            if (paddleX <= 0) {
+                paddleX = 0;
+            } else {
+                // move the paddle left when the left arrow key is pressed
+                play = true;
+                paddleX = paddleX - 30;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        timer.start();
+        if (play) {
+            // when ball intersects with the top of the paddle
+            if(new Rectangle(ballX,ballY,20,20).intersects(new Rectangle(paddleX,600,80,15))) {
+                // change vertical direction
+                Vertical = -Vertical;
+            }
+
+            L: for(int i = 0; i < clouds.clouds.length; i++) {
+                for(int j = 0; j < clouds.clouds[0].length; j++) {
+                    if(clouds.clouds[i][j] > 0) {
+                        int cloudX = j * clouds.cloudLength + 50;
+                        int cloudY = i * clouds.cloudHeight + 30;
+                        int cloudWidth = clouds.cloudLength;
+                        int cloudHeight = clouds.cloudHeight;
+                        
+                        Rectangle rect = new Rectangle(cloudX,cloudY,cloudWidth,cloudHeight);
+                        Rectangle ballSpace = new Rectangle(ballX,ballY,20,20);
+                        Rectangle cloudSpace = rect;
+                        
+                        // when ball intersects with a cloud
+                        if(ballSpace.intersects(cloudSpace)) {
+                            clouds.cloudValue(0, i, j);
+                            
+                            // if it hit the side of the cloud
+                            if(ballX + 19 <= cloudSpace.x || ballX + 1 >= cloudSpace.x + cloudSpace.width) {
+                                // change horizontal direction
+                                Horizontal = -Horizontal;
+                            // if it hit the top or bottom of the cloud
+                            } else {
+                                // change vertical direction
+                                Vertical = -Vertical;
+                            }          
+                            break L;
+                        }
+                    }
+                }
+            }
+            // keep the ball moving in the right horizontal and vertical directions           
+            ballX = ballX + Horizontal;
+            ballY = ballY + Vertical;
+            // when it hits the left side of the screen
+            if(ballX < 0) {
+                // change horizontal direction
+                Horizontal = -Horizontal;
+            }
+            // when it hits the top of the screen
+            if(ballY < 0) {
+                // change vertical direction
+                Vertical = -Vertical;
+            }
+            // when it hits the right side of the screen
+            if(ballX > 570) {
+                // change horizontal direction
+                Horizontal = -Horizontal;
+            }
+        }
+        repaint();
+    }
+    
+}

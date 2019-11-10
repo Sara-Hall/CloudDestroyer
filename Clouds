@@ -1,5 +1,7 @@
 /*
  * Draw clouds for the game
+ * My notes: It was difficult to figure out how to get rid of individual clouds once they were hit.
+ * I did this by giving each cloud an initial value of 1, and adding a condition to only redraw the cloud if it still had a value of 1.
  */
 package BrickGame;
 

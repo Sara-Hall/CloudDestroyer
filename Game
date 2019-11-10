@@ -1,5 +1,7 @@
 /*
  * Gameplay for my game
+ * This was my biggest class, so it had the most bugs.
+ * Scroll to see what the bugs were and how I fixed them.
  */
 package BrickGame;
 

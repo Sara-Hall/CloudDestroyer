@@ -27,8 +27,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private int ballX = 200;
     private int ballY = 300;
     private int Horizontal = -2;
-    private int Vertical = -4;
-    private final Clouds clouds;
+    private int Vertical = -5;
+    private Clouds clouds;
     private int totalClouds = 20;
     private int Health = 3;
     private int mainMenu = 1;
@@ -83,6 +83,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.setColor(Color.black);
             g.setFont(font);
             g.drawString ("WINNER", 220, 300);
+            g.drawString ("Press enter to play again", 220, 340);
+
         // draw game over
         } else if (Health == 0) {
             play = false;
@@ -90,6 +92,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.setColor(Color.black);
             g.setFont(font);
             g.drawString("GAME OVER", 220, 300);
+            g.drawString ("Press enter to play again", 220, 340);
         }
         
         g.dispose();
@@ -122,6 +125,22 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 // move the paddle left when the left arrow key is pressed
                 play = true;
                 paddleX = paddleX - 30;
+            }
+        }
+        // start new game
+        if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!play) {
+                play = true;
+                ballX = 200;
+                ballY = 300;
+                Horizontal = -2;
+                Vertical = -5;
+                paddleX = 450;
+                Health = 3;
+                totalClouds = 20;
+                clouds = new Clouds(5,4);
+                timer.start();
+                repaint();
             }
         }
     }

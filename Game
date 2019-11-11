@@ -28,6 +28,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private int paddleX = 450;
     private int ballX = 200;
     private int ballY = 300;
+    // I was able to make the game more difficult by changing these values
     private int Horizontal = -2;
     private int Vertical = -5;
     private Clouds clouds;
@@ -40,6 +41,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
+        // I've never used a timer before, so I had to do some research first to understand how it works.
         timer = new Timer(delay,this);
         timer.start();
     }
@@ -47,6 +49,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     //graphics
     public void paint(Graphics g) {
         // draw background
+        // This was my first time using graphics in Java, so I also did some reseach to figure it out.
         g.setColor(Color.cyan);
         g.fillRect(1,1,600,700);      
         
@@ -65,9 +68,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         g.setColor(Color.black);
         Font font = new Font ("Arial", 1, 25);
         g.setFont(font);
+        // I had an error when I ran this because health is an integer, so I had to convert it to a string
         g.drawString("Lives: " + String.valueOf(Health), 20, 28);
         
         //draw main menu
+        // I had a hard time figuring out how to get the main menu screen to show up at the start of the game.
+        // I added a condition where it would only display the main menu before the user pressed the enter key.
         if (mainMenu == 1) {
             g.setColor(Color.cyan);
             g.fillRect(1,1,600,700);  
@@ -81,6 +87,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         // draw winner
         if (totalClouds == 0) {
             play = false;
+            // Before I stopped the timer, there was a bug where you could keep moving the paddle at the end of the game.
             timer.stop();
             g.setColor(Color.black);
             g.setFont(font);
@@ -112,6 +119,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
             // if paddle is all the way to the right, stop it from moving
             if (paddleX >= 515) {
+                // To figure out these values, I had to use trial and error
                 paddleX = 515;
             } else {
                 // move the paddle right when the right arrow key is pressed
@@ -131,6 +139,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         // start new game
         if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+            // It was difficult to figure out what needed to be initialized at the start of the game in order to begin a new game.
             if (!play) {
                 play = true;
                 ballX = 200;
@@ -176,6 +185,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                         
                         // when ball intersects with a cloud
                         if(ballSpace.intersects(cloudSpace)) {
+                            // set cloud value to 0 so that it won't be drawn again
                             clouds.cloudValue(0, i, j);
                             totalClouds--;
                             
@@ -187,7 +197,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                             } else {
                                 // change vertical direction
                                 Vertical = -Vertical;
-                            }          
+                            }
+                            // I found this way of getting out of a loop online
                             break L;
                         }
                     }

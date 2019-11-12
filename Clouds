@@ -26,7 +26,7 @@ public class Clouds {
         }
         // size of clouds
         cloudLength = 120;
-        cloudHeight = 40;
+        cloudHeight = 50;
     }
     // draw clouds
     public void draw(Graphics2D g) {

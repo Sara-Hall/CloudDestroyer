@@ -22,15 +22,15 @@ import java.awt.event.KeyListener;
 import javax.swing.Timer;
 
 public class Game extends JPanel implements KeyListener, ActionListener {
+    // initialize variables
     private boolean play = false;
     private final Timer timer;
     private final int delay = 10;
-    private int paddleX = 450;
-    private int ballX = 200;
-    private int ballY = 300;
-    // I was able to make the game more difficult by changing these values
-    private int Horizontal = -2;
-    private int Vertical = -5;
+    private int paddleX;
+    private int ballX;
+    private int ballY;
+    private int Horizontal;
+    private int Vertical;
     private Clouds clouds;
     private int totalClouds = 20;
     private int Health = 3;
@@ -48,6 +48,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     
     //graphics
     public void paint(Graphics g) {
+    
         // draw background
         // This was my first time using graphics in Java, so I also did some reseach to figure it out.
         g.setColor(Color.cyan);
@@ -64,9 +65,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         g.setColor(Color.magenta);
         g.fillOval(ballX,ballY,20,20);   
         
+        // fonts
+        Font font = new Font ("Arial", 1, 22);
+        Font font2 = new Font ("Arial", 1, 32);
+        
         // draw health
         g.setColor(Color.black);
-        Font font = new Font ("Arial", 1, 25);
         g.setFont(font);
         // I had an error when I ran this because health is an integer, so I had to convert it to a string
         g.drawString("Lives: " + String.valueOf(Health), 20, 28);
@@ -75,13 +79,26 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         // I had a hard time figuring out how to get the main menu screen to show up at the start of the game.
         // I added a condition where it would only display the main menu before the user pressed the enter key.
         if (mainMenu == 1) {
+            // draw background
             g.setColor(Color.cyan);
-            g.fillRect(1,1,600,700);  
+            g.fillRect(1,1,600,700); 
+            // draw clouds on the background
+            g.setColor(Color.white);
+            for(int i=0; i < 5; i++) {
+                for(int j=0; j < 4; j++) {
+                    g.fillOval(j * 130 + 40, i * 120 + 50, 120, 50);
+                }
+            }
+            g.setColor(Color.blue);
+            g.setFont(font2);
+            // game title
+            g.drawString("CLOUD DESTROYER", 135, 270);
             g.setColor(Color.black);
             g.setFont(font);
-            g.drawString("CLOUD DESTROYER", 20, 300);
-            g.drawString("Use the arrow keys to move the paddle", 20, 340);
-            g.drawString("Press enter to start", 20, 370);
+            // instructions
+            g.drawString("Use the arrow keys to move the platform under the ball", 20, 370);
+            g.drawString("Try to get rid of all the clouds!", 145, 400);
+            g.drawString("Press enter to start", 195, 490);
         }
         
         // draw winner
@@ -90,18 +107,20 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             // Before I stopped the timer, there was a bug where you could keep moving the paddle at the end of the game.
             timer.stop();
             g.setColor(Color.black);
+            g.setFont(font2);
+            g.drawString ("WINNER", 215, 320);
             g.setFont(font);
-            g.drawString ("WINNER", 220, 300);
-            g.drawString ("Press enter to play again", 220, 340);
+            g.drawString ("Press enter to play again", 160, 360);
 
         // draw game over
         } else if (Health == 0) {
             play = false;
             timer.stop();
             g.setColor(Color.black);
+            g.setFont(font2);
+            g.drawString("GAME OVER", 190, 320);
             g.setFont(font);
-            g.drawString("GAME OVER", 220, 300);
-            g.drawString ("Press enter to play again", 220, 340);
+            g.drawString ("Press enter to play again", 160, 360);
         }
         
         g.dispose();
@@ -141,12 +160,14 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
             // It was difficult to figure out what needed to be initialized at the start of the game in order to begin a new game.
             if (!play) {
+                // initialize values
                 play = true;
-                ballX = 200;
+                ballX = 450;
                 ballY = 300;
+                // I was able to make the game more difficult by changing these values
                 Horizontal = -2;
-                Vertical = -5;
-                paddleX = 450;
+                Vertical = -4;
+                paddleX = 270;
                 Health = 3;
                 totalClouds = 20;
                 clouds = new Clouds(5,4);
